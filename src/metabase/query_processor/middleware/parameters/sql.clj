@@ -220,6 +220,37 @@
         ;; otherwise just return the single number
         (first parts)))))
 
+(s/defn ^:private number?
+  [value]
+  (cond
+    (and (string? value)
+         (boolean (re-find #"\d+" value))) true
+    :else false))
+
+(s/defn ^:private sequentialNumbers?
+  [values]
+  (and (sequential? values)
+       (number? (get values 0))))
+
+(s/defn ^:private singleNumber?
+  [values]
+  (and (not(sequential? values))
+       (number? values)))
+
+(s/defn ^:private numbers?
+  [values]
+  (or (sequentialNumbers? values)
+      (singleNumber? values)))
+
+(s/defn ^:private parse-numbers
+  [values]
+  (cond
+    (sequentialNumbers? values) (into [] (for [value values]
+                                                          (cond
+                                                            (string? value) (parse-number value)
+                                                            :else value)))
+    (singleNumber? values) (parse-number values)))
+
 (s/defn ^:private parse-value-for-type :- ParamValue
   [param-type value]
   (cond
@@ -231,6 +262,10 @@
     (sequential? value)                              (map->MultipleValues
                                                       {:values (for [v value]
                                                                  (parse-value-for-type param-type v))})
+    ;; :value ["0" "1" 2 3] or :value "0"
+    (and (= param-type "dimension")
+         (= (get-in value [:param :type]) "category")
+         (numbers? (get-in value [:param :value]))) (update-in value [:param :value] parse-numbers)
     :else                                            value))
 
 (s/defn ^:private value-for-tag :- ParamValue
