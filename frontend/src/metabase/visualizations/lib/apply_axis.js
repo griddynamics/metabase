@@ -209,7 +209,7 @@ export function applyChartOrdinalXAxis(chart, settings, series, { xValues }) {
          .xUnits(dc.units.ordinal);
 }
 
-export function applyChartYAxis(chart, settings, series, yExtent, axisName) {
+export function applyChartYAxis(chart, settings, series, yExtent, axisName, chartType) {
     let axis;
     if (axisName !== "right") {
         axis = {
@@ -267,7 +267,11 @@ export function applyChartYAxis(chart, settings, series, yExtent, axisName) {
         // elasticY not compatible with log scale
         if (axis.setting("scale") !== "log") {
             // TODO: right axis?
-            chart.elasticY(true);
+            if (chartType === "line") {
+                scale.domain(yExtent);
+            } else {
+                chart.elasticY(true);
+            }
         } else {
             if (!((yExtent[0] < 0 && yExtent[1] < 0) || (yExtent[0] > 0 && yExtent[1] > 0))) {
                 throw "Y-axis must not cross 0 when using log scale.";

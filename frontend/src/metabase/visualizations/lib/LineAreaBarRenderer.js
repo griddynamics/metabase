@@ -433,9 +433,9 @@ function applyXAxisSettings({ settings, series }, xAxisProps, parent) {
     else                                    applyChartOrdinalXAxis(parent, settings, series, xAxisProps);
 }
 
-function applyYAxisSettings({ settings }, { yLeftSplit, yRightSplit }, parent) {
-    if (yLeftSplit  &&  yLeftSplit.series.length > 0) applyChartYAxis(parent, settings, yLeftSplit.series,  yLeftSplit.extent,  "left");
-    if (yRightSplit && yRightSplit.series.length > 0) applyChartYAxis(parent, settings, yRightSplit.series, yRightSplit.extent, "right");
+function applyYAxisSettings({ settings }, { yLeftSplit, yRightSplit }, parent, chartType) {
+    if (yLeftSplit  &&  yLeftSplit.series.length > 0) applyChartYAxis(parent, settings, yLeftSplit.series,  yLeftSplit.extent,  "left", chartType);
+    if (yRightSplit && yRightSplit.series.length > 0) applyChartYAxis(parent, settings, yRightSplit.series, yRightSplit.extent, "right", chartType);
 }
 
 
@@ -544,7 +544,7 @@ export default function lineAreaBar(element: Element, props: LineAreaBarProps) {
     // override tick format for bars. ticks are aligned with beginning of bar, so just show the start value
     if (isHistogramBar(props)) parent.xAxis().tickFormat(d => formatNumber(d));
 
-    applyYAxisSettings(props, yAxisProps, parent);
+    applyYAxisSettings(props, yAxisProps, parent, props.chartType);
 
     setupTooltips(props, datas, parent, brushChangeFunctions);
 
