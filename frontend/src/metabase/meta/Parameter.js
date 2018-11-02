@@ -43,6 +43,8 @@ export function getParameterTargetFieldId(target: ?ParameterTarget, datasetQuery
     if (target && target[0] === "dimension") {
         let dimension = target[1];
         if (Array.isArray(dimension) && mbqlEq(dimension[0], "template-tag")) {
+            if (datasetQuery === undefined)
+                return null;
             if (datasetQuery.type === "native") {
                 let templateTag = datasetQuery.native.template_tags[String(dimension[1])];
                 if (templateTag && templateTag.type === "dimension") {
