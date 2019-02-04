@@ -135,7 +135,7 @@ export function getXValues(datas, chartType) {
 }
 
 export function getFriendlyName(column) {
-    if (column.display_name && column.display_name !== column.name && column.display_name.indexOf(",") < 0) {
+    if (column.display_name && column.display_name !== column.name && column.display_name.indexOf("_") === 0) {
         return column.display_name;
     } else {
         // NOTE Atte Keinänen 8/7/17:
